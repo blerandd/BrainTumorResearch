@@ -1,0 +1,17 @@
+
+.venv/
+__pycache__/
+*.py[cod]
+.idea/
+.DS_Store
+
+data/raw/
+data/processed/
+
+results/checkpoints/
+models/
+*.h5
+*.keras
+*.weights.h5
+
+.env
