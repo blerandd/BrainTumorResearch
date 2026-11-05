@@ -1,101 +1,252 @@
 # Brain Tumor MRI Research
+### Patient-independent classification · Tumor segmentation · Explainable deep learning
 
-A patient-independent deep learning research project for brain tumor MRI classification, tumor segmentation, and model explainability using the Figshare brain tumor dataset.
+<p align="center">
+  <img src="results/figures/mri_mask_visualization.png" alt="Brain MRI slices and corresponding tumor masks" width="88%">
+</p>
 
-## Research objectives
+<p align="center">
+  <strong>A reproducible research pipeline for analyzing brain tumor MRI images with deep learning.</strong>
+  <br>
+  Built with Python, TensorFlow, Keras, NumPy, pandas, and scikit-learn.
+</p>
 
-This project investigates three related tasks:
+---
 
-- **Tumor classification:** classify MRI slices into glioma, meningioma, and pituitary tumor categories.
-- **Tumor segmentation:** identify tumor regions using U-Net models and the dataset's manually annotated binary masks.
-- **Explainability:** use Grad-CAM to visualize image regions that influence the classification model's predictions.
+## Overview
 
-The classification experiments include a custom CNN, VGG16, and ResNet50. Segmentation experiments compare baseline U-Net and augmented U-Net variants, including a flip-only experiment.
+This repository contains an end-to-end research project focused on three complementary tasks using the Figshare brain tumor MRI dataset:
+
+| Research task | Objective | Main approach |
+|---|---|---|
+| **Classification** | Predict the tumor category for an MRI slice | Convolutional neural networks |
+| **Segmentation** | Delineate the tumor region at pixel level | U-Net and augmentation experiments |
+| **Explainability** | Visualize image regions influencing classification predictions | Grad-CAM |
+
+The three classification categories are **glioma**, **meningioma**, and **pituitary tumor**. The segmentation experiments use the dataset's manually annotated binary masks.
+
+The project also includes patient-level evaluation, model comparisons, boundary-based segmentation metrics, statistical analysis, and failure-case inspection.
 
 ## Dataset
 
-**Source:** [Figshare – Brain Tumor Dataset](https://doi.org/10.6084/m9.figshare.1512427)
+**Source:** [Figshare — Brain Tumor Dataset](https://doi.org/10.6084/m9.figshare.1512427)
 
-The dataset contains 3,064 contrast-enhanced T1-weighted MRI slices from 233 patients, with three tumor classes: glioma, meningioma, and pituitary. It provides patient identifiers, image-level class labels, and binary tumor masks. The original dataset is distributed under the **CC BY 4.0** license. Cite the original dataset and follow its license terms when using or publishing results.
+| Dataset characteristic | Description |
+|---|---|
+| MRI slices | 3,064 |
+| Patients | 233 |
+| Imaging modality | T1-weighted contrast-enhanced MRI |
+| Classes | Glioma, meningioma, pituitary |
+| Annotations | Image-level labels and binary tumor masks |
 
-### Data preparation and expected local files
+The original dataset is distributed under the **CC BY 4.0** license. Refer to the Figshare record for the original authorship, recommended citation, and license terms.
 
-The raw dataset and processed images are not stored in this repository. Download the original dataset from Figshare and prepare the local data before running the training or evaluation scripts.
+### Dataset exploration
 
-The data loader expects this structure:
+<p align="center">
+  <img src="results/figures/dataset_eda.png" alt="Exploratory analysis of the brain tumor MRI dataset" width="88%">
+</p>
 
-```text
-data/
-├── raw/
-└── processed/
-    ├── images/
-    ├── masks/
-    └── splits.csv
+## Research pipeline
+
+The workflow is organized into data preparation, patient-level partitioning, model training, and independent evaluation.
+
+```mermaid
+flowchart TD
+    A["Figshare MRI dataset"] --> B["Data preparation"]
+    B --> C["MRI images + binary masks + metadata"]
+    C --> D["Patient-independent train / validation / test split"]
+    D --> E["Model training"]
+    E --> F["Classification CNN"]
+    E --> G["U-Net segmentation"]
+    F --> H["Classification evaluation"]
+    G --> I["Segmentation evaluation"]
+    F --> J["Grad-CAM explainability"]
+    H --> K["Patient-level and statistical analysis"]
+    I --> K
+    J --> K
+    K --> L["Tables, figures, and research findings"]
 ```
 
-The `splits.csv` file must contain `sample_id`, `patient_id`, `label`, `image_path`, `mask_path`, and `split` columns. The `split` column must contain `train`, `validation`, and `test`. Image and mask paths are relative to `data/processed/`. Each patient must belong to exactly one partition; the dataset loader checks for patient leakage.
+### Key methodological principles
 
-The repository includes `src/data/prepare_dataset.py` for converting original MATLAB files into PNG images, binary masks, and metadata. It expects the original `.mat` files under `data/raw/`. The resulting metadata must be organized into the `splits.csv` format required by the loader before training.
+- **Patient-independent partitions:** slices belonging to the same patient must remain in a single partition to reduce data leakage.
+- **Training-only augmentation:** validation and test data are not augmented.
+- **Validation-based model selection:** validation data are used for checkpoint selection and early stopping.
+- **Independent test evaluation:** the test partition is reserved for final performance assessment, not model tuning.
+- **Multiple evaluation levels:** image-level results are complemented by patient-level summaries.
+- **Reproducibility:** seeds, preprocessing choices, model checkpoints, and evaluation outputs are recorded.
 
-## Environment and installation
+## Visual results
 
-The project uses Python and TensorFlow. Dependencies are listed in `requirements.txt`. TensorFlow installation may vary by operating system and hardware.
+### Classification
 
-### macOS / Linux
+<p align="center">
+  <img src="results/classification/confusion_matrix.png" alt="Classification confusion matrix" width="48%">
+  <img src="results/classification/roc_curves.png" alt="Classification ROC curves" width="48%">
+</p>
+
+The classification evaluation scripts generate per-class metrics, confusion matrices, ROC curves, prediction tables, and patient-level analyses.
+
+### Segmentation
+
+<p align="center">
+  <img src="results/segmentation/three_model_comparison/three_model_overall_comparison.png" alt="Comparison of three U-Net segmentation experiments" width="88%">
+</p>
+
+The segmentation experiments include:
+
+- Baseline U-Net
+- Augmented U-Net
+- Flip-only U-Net
+
+Evaluation includes Dice coefficient, Intersection over Union (IoU), precision, recall, patient-level summaries, and boundary-based measures such as HD95, ASSD, and Boundary Dice. Boundary distances are expressed in pixels at the model input resolution; they should not be interpreted as millimeters without valid image-spacing information.
+
+### Explainability
+
+Grad-CAM is used to visualize regions that contribute to classification predictions. Both correctly and incorrectly classified examples are retained for qualitative inspection.
+
+<p align="center">
+  <img src="results/explainability/gradcam_improved/correct_sample_1_patient_100360.png" alt="Grad-CAM example for a correctly classified MRI slice" width="48%">
+  <img src="results/explainability/gradcam_improved/incorrect_sample_124_patient_110116.png" alt="Grad-CAM example for an incorrectly classified MRI slice" width="48%">
+</p>
+
+Grad-CAM maps are model explanations, not tumor segmentations or clinical evidence. Their overlap with manual masks is an analysis of localization behavior, not proof that the model has learned clinically valid features.
+
+## Repository structure
+
+```text
+BrainTumorResearch/
+├── data/
+│   ├── raw/                       # Original dataset files (local)
+│   └── processed/                 # Images, masks, splits.csv (local)
+├── models/
+│   ├── classification/            # Classification checkpoints
+│   └── segmentation/               # U-Net checkpoints
+├── results/
+│   ├── classification/            # Classification metrics and plots
+│   ├── explainability/             # Grad-CAM outputs
+│   ├── figures/                    # Dataset visualizations
+│   └── segmentation/              # Segmentation results and analyses
+├── src/
+│   ├── data/                       # Download, preparation, loading, EDA
+│   ├── models/                     # CNN and U-Net architectures
+│   ├── training/                   # Training pipelines
+│   ├── evaluation/                 # Metrics, comparisons, statistics
+│   └── explainability/             # Grad-CAM
+├── .gitattributes
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+The raw and processed dataset directories are local inputs and are not included in the repository. Model checkpoints are stored using Git LFS.
+
+## Getting started
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/blerandd/BrainTumorResearch.git
 cd BrainTumorResearch
+```
 
+### 2. Create and activate a virtual environment
+
+**macOS / Linux**
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
-
-python -m pip install --upgrade pip
-pip install -r requirements.txt
 ```
 
-### Windows PowerShell
+**Windows PowerShell**
 
 ```powershell
-git clone https://github.com/blerandd/BrainTumorResearch.git
-cd BrainTumorResearch
-
 py -3.11 -m venv .venv
 .venv\Scripts\Activate.ps1
+```
 
+### 3. Install dependencies
+
+```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Verify TensorFlow installation:
+Verify TensorFlow:
 
 ```bash
 python -c "import tensorflow as tf; print(tf.__version__)"
 ```
 
-## Running the project
+TensorFlow installation and hardware acceleration vary by operating system and processor. Consult the official TensorFlow installation guide if installation requires platform-specific steps.
 
-Run commands from the repository root with the virtual environment activated and the local dataset prepared.
+### 4. Retrieve Git LFS model files
 
-### Dataset inspection
+Install [Git LFS](https://git-lfs.com/) before cloning if you want the stored model checkpoints:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+If you cloned before installing Git LFS, run the commands above from the repository directory.
+
+### 5. Prepare the dataset
+
+Download the original Figshare files and place the MATLAB files under `data/raw/`. Then run:
+
+```bash
+python -m src.data.prepare_dataset
+```
+
+Create the patient-independent partitions:
+
+```bash
+python -m src.data.make_splits
+```
+
+The data loader expects the following processed structure:
+
+```text
+data/processed/
+├── images/
+├── masks/
+└── splits.csv
+```
+
+The `splits.csv` file must contain these columns:
+
+```text
+sample_id, patient_id, label, image_path, mask_path, split
+```
+
+Allowed split values are `train`, `validation`, and `test`. Image and mask paths are relative to `data/processed/`. The loader validates the metadata, checks that referenced files exist, and checks that a patient does not appear in multiple partitions.
+
+### 6. Inspect the prepared data
 
 ```bash
 python -m src.data.dataset_loader
 python -m src.data.analyze_dataset
 ```
 
-### Model training
+## Training
 
-```bash
-python -m src.training.train_classification
-python -m src.training.train_unet
-python -m src.training.train_unet_augmented
-python -m src.training.train_unet_flip_only
-```
+Run training commands from the repository root with the virtual environment activated and the dataset prepared.
+
+| Experiment | Command |
+|---|---|
+| Classification CNN | `python -m src.training.train_classification` |
+| Baseline U-Net | `python -m src.training.train_unet` |
+| Augmented U-Net | `python -m src.training.train_unet_augmented` |
+| Flip-only U-Net | `python -m src.training.train_unet_flip_only` |
 
 Training scripts save model checkpoints under `models/` and training histories, logs, and plots under `results/`.
 
-### Evaluation
+## Evaluation and analysis
+
+### Main evaluation commands
 
 ```bash
 python -m src.evaluation.evaluate_classification
@@ -104,76 +255,71 @@ python -m src.evaluation.evaluate_patient_level
 python -m src.evaluation.evaluate_boundary_metrics
 ```
 
-Additional analysis scripts in `src/evaluation/` compare models, examine class-wise and patient-level performance, analyze segmentation errors, and calculate statistical and boundary-based metrics. Run an analysis module with `python -m src.evaluation.<module_name>` from the repository root.
+### Further analysis
 
-### Grad-CAM explainability
+The `src/evaluation/` directory contains additional scripts for:
+
+- Comparing baseline, augmented, and flip-only segmentation experiments
+- Comparing tumor-class performance
+- Patient-level bootstrap confidence intervals and statistical comparisons
+- Examining segmentation failure cases and missed tumors
+- Investigating threshold sensitivity and empty predictions
+- Exploring tumor morphology and MRI intensity relationships
+- Visualizing model comparisons and patient-level changes
+
+Run an individual analysis script from the repository root using:
+
+```bash
+python -m src.evaluation.<script_name>
+```
+
+Replace `<script_name>` with the Python filename without the `.py` extension.
+
+## Explainability
+
+Run Grad-CAM with:
 
 ```bash
 python -m src.explainability.gradcam
 ```
 
-Grad-CAM outputs and analysis files are saved under `results/explainability/`.
+Outputs are saved under `results/explainability/`.
 
-## Project structure
+## Models and implementation
 
-```text
-BrainTumorResearch/
-├── data/
-│   ├── raw/                  # Original dataset files (not tracked)
-│   └── processed/            # Images, masks, and split metadata (not tracked)
-├── models/
-│   ├── classification/       # Trained classification models (Git LFS)
-│   └── segmentation/         # Trained U-Net models (Git LFS)
-├── results/
-│   ├── classification/
-│   ├── explainability/
-│   ├── figures/
-│   └── segmentation/
-├── src/
-│   ├── data/                 # Dataset preparation, loading, and inspection
-│   ├── evaluation/           # Metrics, comparisons, and statistical analyses
-│   ├── explainability/       # Grad-CAM
-│   ├── models/               # CNN and U-Net architectures
-│   └── training/             # Model training pipelines
-├── .gitattributes
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
+| Component | Implementation |
+|---|---|
+| Deep learning framework | TensorFlow / Keras |
+| Image processing | NumPy, Pillow, OpenCV |
+| Data handling | pandas |
+| Classification metrics | scikit-learn |
+| Segmentation architecture | U-Net |
+| Explainability | Grad-CAM |
+| Visualization | Matplotlib |
 
-## Evaluation methodology
+The repository currently stores these model checkpoint paths through Git LFS:
 
-The project emphasizes patient-independent evaluation:
+- `models/classification/custom_cnn_best.keras`
+- `models/segmentation/unet_best.keras`
+- `models/segmentation/unet_augmented_best.keras`
+- `models/segmentation/unet_flip_only_best.keras`
 
-- Keep all MRI slices from a patient in the same data partition.
-- Apply data augmentation to training data only.
-- Use validation data for model selection and early stopping.
-- Keep the test set separate from model selection and threshold tuning.
-- Report classification performance per class and with macro/weighted averages.
-- Evaluate segmentation using Dice, Intersection over Union (IoU), precision, and recall.
-- Include patient-level summaries so results are not interpreted only from individual MRI slices.
-- Use boundary metrics and qualitative visualizations to examine segmentation quality and failure cases.
-- Record random seeds, preprocessing settings, package versions, and model configurations for reproducibility.
+## Reproducibility and interpretation
 
-## Models and outputs
+For a fair evaluation, report both the number of MRI slices and the number of unique patients in each partition. Distinguish image-level metrics from patient-level metrics, and state how patient-level values are aggregated.
 
-Trained model checkpoints are stored in Git LFS:
+Segmentation overlap metrics measure agreement between predicted and reference masks. Boundary metrics provide complementary information about contour differences. Grad-CAM highlights features relevant to a classifier's output and must not be treated as a substitute for a segmentation mask.
 
-- Custom CNN: `models/classification/custom_cnn_best.keras`
-- Baseline U-Net: `models/segmentation/unet_best.keras`
-- Augmented U-Net: `models/segmentation/unet_augmented_best.keras`
-- Flip-only U-Net: `models/segmentation/unet_flip_only_best.keras`
-
-Evaluation tables, plots, Grad-CAM visualizations, and experiment comparisons are organized under `results/`.
+Exploratory statistical relationships should be interpreted cautiously, especially when the number of independent patients is small. Report effect sizes, uncertainty, and the analysis scope alongside p-values; avoid causal claims from correlations.
 
 ## Limitations and responsible use
 
-This is an academic research project, not a medical device or clinical diagnostic system. Results on this dataset do not establish clinical safety or generalization to other hospitals, scanners, patient populations, or MRI protocols. Model predictions must not be used as a substitute for assessment by qualified medical professionals.
+This repository is an academic research project. It is **not** a medical device or a clinical diagnostic system. Results on one dataset do not establish safety or generalization to other hospitals, scanners, patient populations, or MRI protocols. Model outputs must not be used as a substitute for assessment by qualified medical professionals.
 
-## Citation
+## Dataset citation
 
-If you use the dataset, cite the original Figshare record:
+Please cite the original dataset in reports and publications:
 
-[Brain Tumor Dataset – Figshare](https://doi.org/10.6084/m9.figshare.1512427)
+[Figshare — Brain Tumor Dataset](https://doi.org/10.6084/m9.figshare.1512427)
 
-Consult the dataset record for its authorship, recommended citation, and license information.
+Consult the Figshare record for the full bibliographic citation and license details.
