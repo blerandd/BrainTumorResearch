@@ -1,0 +1,2 @@
+evaluation,threshold,image_count,dice_mean,dice_std,dice_median,iou_mean,precision_mean,recall_mean,hd95_mean_pixels,hd95_median_pixels,hd95_infinite_count,assd_mean_pixels,assd_median_pixels,assd_infinite_count,boundary_dice_mean,boundary_dice_std,empty_predictions,empty_prediction_rate
+test_set,0.1,489.0,0.7068131086741694,0.30131191097926113,0.8354285714285714,0.614526626382021,0.7333482760404442,0.7496862702090344,15.580059958959076,6.4031242374328485,37.0,5.378171656094279,2.21548009209247,37.0,0.6004972345850691,0.3234671234494768,37.0,7.566462167689162

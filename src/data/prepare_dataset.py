@@ -73,9 +73,9 @@ def process_file(path, writer):
     IMAGE_DIR.mkdir(parents=True, exist_ok=True)
     MASK_DIR.mkdir(parents=True, exist_ok=True)
 
-    Image.fromarray(normalize_image(image), mode="I;16").save(IMAGE_DIR / image_name)
+    Image.fromarray(normalize_image(image)).save(IMAGE_DIR / image_name)
     binary_mask = (mask > 0).astype(np.uint8) * 255
-    Image.fromarray(binary_mask, mode="L").save(MASK_DIR / mask_name)
+    Image.fromarray(binary_mask).save(MASK_DIR / mask_name)
 
     writer.writerow({
         "sample_id": path.stem,

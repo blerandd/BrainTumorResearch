@@ -1,0 +1,2 @@
+patient_count,baseline_mean_dice,augmented_mean_dice,mean_dice_change,median_dice_change,std_dice_change,bootstrap_95_ci_lower,bootstrap_95_ci_upper,wilcoxon_statistic,wilcoxon_p_value,patients_improved,patients_deteriorated,patients_unchanged,improved_percentage,deteriorated_percentage
+35,0.6970904269388744,0.7282562868935721,0.031165859954697745,0.006376504898071289,0.10215876492652196,-0.0003793334003005706,0.06696459735078471,228.0,0.1583592604729347,22,13,0,62.857142857142854,37.142857142857146

@@ -1,0 +1,2 @@
+test,statistic,p_value,epsilon_squared,patient_count,group_count
+Kruskal-Wallis,17.082426303854902,0.00019525324455810765,0.4713258219954657,35,3

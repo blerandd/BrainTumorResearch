@@ -5,13 +5,28 @@ __pycache__/
 .idea/
 .DS_Store
 
+.env
+.env.*
+
 data/raw/
 data/processed/
 
 results/checkpoints/
-models/
-*.h5
-*.keras
-*.weights.h5
 
-.env
+*.h5
+*.weights.h5
+*.keras
+
+models/*
+
+!models/classification/
+!models/segmentation/
+
+models/classification/*
+models/segmentation/*
+
+!models/classification/custom_cnn_best.keras
+
+!models/segmentation/unet_best.keras
+!models/segmentation/unet_augmented_best.keras
+!models/segmentation/unet_flip_only_best.keras

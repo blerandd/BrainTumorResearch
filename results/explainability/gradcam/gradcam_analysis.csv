@@ -1,0 +1,13 @@
+sample_id,patient_id,true_label,predicted_label,confidence,correct,heatmap_dice_top20,heatmap_iou_top20,visualization_path
+1,100360,meningioma,meningioma,0.9921389222145081,True,0.03425417678994571,0.017425537109375,results/explainability/gradcam/correct_sample_1_patient_100360.png
+115,108945,meningioma,meningioma,0.9794246554374695,True,0.02768749247622487,0.0140380859375,results/explainability/gradcam/correct_sample_115_patient_108945.png
+124,110116,meningioma,pituitary,0.9977028369903564,False,0.007893438579181056,0.00396235760277365,results/explainability/gradcam/incorrect_sample_124_patient_110116.png
+16,101127,meningioma,pituitary,0.6416780352592468,False,0.021686746987951807,0.010962241169305725,results/explainability/gradcam/incorrect_sample_16_patient_101127.png
+209,100820,glioma,meningioma,0.8908246159553528,False,0.024698549542727325,0.012503686228251253,results/explainability/gradcam/incorrect_sample_209_patient_100820.png
+210,100820,glioma,meningioma,0.8838786482810974,False,0.19748362033976924,0.10955995882655688,results/explainability/gradcam/incorrect_sample_210_patient_100820.png
+709,105936,pituitary,pituitary,0.9999729990959167,True,0.024845644573383917,0.012579090087375715,results/explainability/gradcam/correct_sample_709_patient_105936.png
+710,105936,pituitary,pituitary,0.999980628490448,True,0.02995762092649423,0.015206587048438544,results/explainability/gradcam/correct_sample_710_patient_105936.png
+754,101020,glioma,glioma,0.9316730499267578,True,0.17469387755102042,0.09570661896243292,results/explainability/gradcam/correct_sample_754_patient_101020.png
+1854,MR048621B,glioma,glioma,0.5090781450271606,True,0.07012092143484429,0.03633436012321479,results/explainability/gradcam/correct_sample_1854_patient_MR048621B.png
+1295,102648,pituitary,meningioma,0.988825798034668,False,0.013880049701488014,0.006988525390625,results/explainability/gradcam/incorrect_sample_1295_patient_102648.png
+1296,102648,pituitary,meningioma,0.9971475601196289,False,0.020462956244104203,0.010337243401759531,results/explainability/gradcam/incorrect_sample_1296_patient_102648.png

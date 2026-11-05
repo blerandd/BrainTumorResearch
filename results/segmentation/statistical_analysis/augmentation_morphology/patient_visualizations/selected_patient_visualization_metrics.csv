@@ -1,0 +1,5 @@
+patient_id,sample_id,label,baseline_dice,augmented_dice,dice_improvement,visualization
+92897,808,glioma,3.4364261e-10,0.7160494,0.7160494,patient_92897_sample_808.png
+MR031409B,2143,glioma,7.246377e-11,0.58392674,0.58392674,patient_MR031409B_sample_2143.png
+MR048621B,1948,glioma,0.83240014,8.5034015e-11,-0.83240014,patient_MR048621B_sample_1948.png
+101020,760,glioma,0.92131615,1.0928962e-10,-0.92131615,patient_101020_sample_760.png

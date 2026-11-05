@@ -1,0 +1,2 @@
+evaluation,image_count,hd95_mean_pixels,hd95_median_pixels,hd95_infinite_count,assd_mean_pixels,assd_median_pixels,assd_infinite_count,boundary_dice_mean,boundary_dice_std
+test_set,489.0,14.85528467063337,6.35205444132039,38.0,5.312094349350344,1.9196373470323476,38.0,0.6055613875487159,0.3334739486266324

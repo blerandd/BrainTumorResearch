@@ -1,0 +1,2 @@
+number_of_patients,accuracy,balanced_accuracy,precision_macro,recall_macro,f1_macro,precision_weighted,recall_weighted,f1_weighted,specificity_macro,roc_auc_macro_ovr
+35,0.8,0.8214285714285715,0.8141025641025642,0.8214285714285715,0.8034920634920635,0.8302197802197802,0.8,0.8005986394557822,0.9035674470457079,0.9317320016077781
