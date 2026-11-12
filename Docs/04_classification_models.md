@@ -497,3 +497,12 @@ The next chapter focuses on the segmentation component of the project and explai
 **Task:** Multi-Class Brain Tumor MRI Classification  
 **Classes:** Glioma, Meningioma, Pituitary Tumor  
 **Investigated Architectures:** Custom CNN, VGG16, ResNet50
+
+## Implementation Details Confirmed by the Evaluation Pipeline
+
+The classification evaluation scripts load the checkpoint at models/classification/custom_cnn_best.keras. The evaluation code checks that the model produces three output values, corresponding to glioma, meningioma, and pituitary. For each test image, the predicted class is selected using the index of the largest output probability (argmax).
+
+The test loader uses the existing metadata split and configures 256 × 256 single-channel images, batch size 16, and seed 42. The classification evaluation reports accuracy, balanced accuracy, macro- and weighted-averaged precision, recall, and F1-score, along with per-class specificity and multi-class ROC-AUC. ROC-AUC is computed with a one-vs-rest formulation and macro averaging.
+
+The recorded headline result of 0.8466 accuracy and 0.9598 macro ROC-AUC belongs to the evaluated Custom CNN checkpoint, not automatically to VGG16 or ResNet50. Results should always be associated with the exact checkpoint and evaluation script that produced them.
+
