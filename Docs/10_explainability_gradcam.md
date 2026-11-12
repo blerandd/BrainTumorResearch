@@ -404,3 +404,13 @@ The following chapter focuses on failure case analysis, examining examples where
 **Main Application:** Brain Tumor Classification  
 **Classification Categories:** Glioma, Meningioma, Pituitary Tumor  
 **Output:** Class-specific activation heatmaps
+
+## Implementation Details Confirmed in the Grad-CAM Script
+
+The current implementation is in `src/explainability/gradcam.py`. It loads the Custom CNN checkpoint at `models/classification/custom_cnn_best.keras` and uses the layer named `activation_3` as the Grad-CAM target layer.
+
+The script constructs a secondary Keras model that returns both the target-layer feature maps and the classifier output. It selects the score for the class being explained, computes gradients of that class score with respect to the target feature maps, averages the gradients over the spatial dimensions to obtain channel weights, and computes a weighted sum of the feature maps.
+
+The resulting map is passed through ReLU, resized to 256 × 256 using bilinear interpolation, and normalized by its maximum value. The script can generate heatmaps for the actual class and predicted class.
+
+The script also compares thresholded heatmap regions with the ground-truth segmentation mask at configured percentiles 50, 70, 80, and 90, reporting overlap measurements such as Dice and IoU. These heatmap-mask overlap measurements are diagnostic comparisons; they are not the same as the model's segmentation evaluation metrics and do not by themselves establish clinical interpretability.
