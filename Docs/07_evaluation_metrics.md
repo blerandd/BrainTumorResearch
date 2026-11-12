@@ -545,3 +545,19 @@ These measurements form the basis for the patient-level and statistical analyses
 **Segmentation Metrics:** Dice, IoU, Boundary Dice  
 **Boundary Tolerance:** 2 pixels  
 **Evaluation Levels:** Image-level and Patient-level
+
+## Implementation Details: Standard U-Net Evaluation
+
+The standard evaluation implementation in src/evaluation/evaluate_unet.py uses a probability threshold of 0.5 to convert model outputs into binary predictions. Ground-truth masks are also converted to binary values using a threshold of 0.5.
+
+For each test image, the script calculates Dice, IoU, pixel precision, and pixel recall. Precision and recall use scikit-learn with zero_division=0, so a metric is set to zero rather than raising a warning when its denominator is zero.
+
+The script then creates:
+- An overall image-level summary containing mean, standard deviation, median, minimum, and maximum for each metric.
+- A class summary grouped by the metadata label.
+- A patient summary grouped by patient_id, where each patient's image-level scores are averaged within that patient.
+
+**Important distinction:** the overall summary is calculated from per-image metric rows. The patient summary first averages images within each patient. These are different aggregation levels and should not be described interchangeably. The script's printed patient-level summary then averages the patient-level Dice and IoU means across patients.
+
+The evaluation script loads models/segmentation/unet_best.keras by default, with a fallback search when that file is absent. It loads the model with the project's custom loss and Dice functions and uses compile=False.
+

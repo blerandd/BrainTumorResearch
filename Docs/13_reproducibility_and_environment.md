@@ -578,3 +578,23 @@ The following chapter focuses on the limitations of the research and possible di
 **Dataset:** Figshare Brain Tumor MRI Dataset  
 **Dataset Split:** 70% / 15% / 15%  
 **Random Seed:** 42
+
+## Source-Code Configuration Checks
+
+The following settings were verified against the current scripts:
+
+| Component | Verified configuration |
+|---|---|
+| Dataset loader defaults | Image size 256 × 256; batch size 16; seed 42 |
+| Baseline U-Net training | Maximum 50 epochs; batch size 4; seed 42 |
+| Flip-only U-Net training | Maximum 50 epochs; batch size 4; seed 42; horizontal flip with probability 0.5 |
+| Flip-plus-rotation U-Net training | Maximum 50 epochs; batch size 4; seed 42; horizontal flip probability 0.5; random rotation between -10 and +10 degrees |
+| Classification evaluation | Custom CNN checkpoint; test split; batch size 16; seed 42 |
+| Grad-CAM | Custom CNN checkpoint; target layer activation_3; heatmap resized to 256 × 256 |
+
+For the rotation experiment, the MRI image is transformed using bilinear interpolation while its mask is transformed using nearest-neighbor interpolation. This preserves smoother image intensities while avoiding interpolated class labels in the binary mask.
+
+A configured maximum epoch count is not necessarily the number of epochs actually completed. Early stopping can stop training sooner. Reproduction should therefore use the saved training log and history CSV to report the executed epoch count and best epoch, rather than reporting the configured maximum as the actual duration.
+
+The local environment recorded for development is machine-specific. TensorFlow device availability can differ across computers, so GPU acceleration should be reported from the actual runtime rather than inferred from the presence of TensorFlow or an Apple Silicon processor.
+

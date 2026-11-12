@@ -529,3 +529,21 @@ The following chapter focuses on the evaluation metrics used to measure classifi
 **Segmentation Experiments:** Baseline U-Net, Flip-only U-Net, Flip and Rotation U-Net  
 **Batch Size:** 16  
 **Image Resolution:** 256 × 256
+
+## Implementation Check: Baseline U-Net Training
+
+The baseline training configuration in src/training/train_unet.py was checked directly. It sets the random seed to 42, uses 50 as the maximum epoch count, and constructs the segmentation loader with 256 × 256 images and batch size 4.
+
+The training script uses the training and validation partitions; the test partition is not passed to model.fit(). Its callbacks are:
+
+| Callback | Configuration | Purpose |
+|---|---|---|
+| ModelCheckpoint | Monitor val_loss; save only the best model; mode min | Preserve the checkpoint with the lowest validation loss |
+| EarlyStopping | Monitor val_loss; patience 10; restore best weights | Stop training when validation loss stops improving |
+| ReduceLROnPlateau | Monitor val_loss; factor 0.5; patience 4; minimum learning rate 1e-7 | Reduce the learning rate when validation loss plateaus |
+| CSVLogger | Writes results/segmentation/training_log.csv | Record epoch-level training values |
+
+The script saves the best model to models/segmentation/unet_best.keras, the training history to results/segmentation/training_history.csv, and the training curves to results/segmentation/training_curves.png.
+
+The configured 50 epochs are a maximum, not a guarantee that all 50 epochs execute: early stopping can terminate training sooner. Do not apply this exact configuration to the flip-only or flip-and-rotation experiments unless their own scripts confirm it.
+

@@ -382,3 +382,48 @@ These procedures provide the prepared data required for the classification and s
 **Image Resolution:** 256 × 256  
 **Data Split:** 70% Training / 15% Validation / 15% Testing  
 **Random Seed:** 42
+
+## 17. Implementation Details Confirmed in the Dataset Loader
+
+The source implementation in src/data/dataset_loader.py provides the following safeguards and processing details:
+
+1. The metadata file is read from data/processed/splits.csv by default.
+2. Required columns are sample_id, patient_id, label, image_path, mask_path, and split.
+3. The loader rejects missing metadata values and labels outside glioma, meningioma, and pituitary.
+4. It requires the split names to be exactly train, validation, and test.
+5. It checks that every referenced image and mask file exists.
+6. It groups metadata by patient and raises an error if a patient appears in more than one partition. This is an explicit runtime leakage check.
+
+The image and mask pipelines use different decoding and resizing rules:
+
+| Data | PNG decoding | Value conversion | Resize interpolation |
+|---|---|---|---|
+| MRI image | One channel, uint16 | float32 divided by 65535.0 | Bilinear |
+| Segmentation mask | One channel, uint8 | Binary: values greater than zero become 1 | Nearest neighbor, followed by a binary threshold |
+
+Both outputs are assigned the shape (256, 256, 1). The classification pipeline loads images and integer class labels, while the segmentation pipeline loads paired images and masks.
+
+The loader constructor defaults to batch size 16 and seed 42. Training scripts may override these defaults; for example, the baseline U-Net training script explicitly uses batch size 4. Batch size should therefore be reported per experiment rather than assumed to be identical across the repository.
+
+## 17. Implementation Details Confirmed in the Dataset Loader
+
+The source implementation in src/data/dataset_loader.py provides the following safeguards and processing details:
+
+1. The metadata file is read from data/processed/splits.csv by default.
+2. Required columns are sample_id, patient_id, label, image_path, mask_path, and split.
+3. The loader rejects missing metadata values and labels outside glioma, meningioma, and pituitary.
+4. It requires the split names to be exactly train, validation, and test.
+5. It checks that every referenced image and mask file exists.
+6. It groups metadata by patient and raises an error if a patient appears in more than one partition. This is an explicit runtime leakage check.
+
+The image and mask pipelines use different decoding and resizing rules:
+
+| Data | PNG decoding | Value conversion | Resize interpolation |
+|---|---|---|---|
+| MRI image | One channel, uint16 | float32 divided by 65535.0 | Bilinear |
+| Segmentation mask | One channel, uint8 | Binary: values greater than zero become 1 | Nearest neighbor, followed by a binary threshold |
+
+Both outputs are assigned the shape (256, 256, 1). The classification pipeline loads images and integer class labels, while the segmentation pipeline loads paired images and masks.
+
+The loader constructor defaults to batch size 16 and seed 42. Training scripts may override these defaults; for example, the baseline U-Net training script explicitly uses batch size 4. Batch size should therefore be reported per experiment rather than assumed to be identical across the repository.
+
