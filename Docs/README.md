@@ -36,24 +36,26 @@ The documentation is organized into 14 chapters.
 
 | File | Description |
 |---|---|
-| `01_project_overview.md` | Research objectives, problem definition, scope, and methodology. |
-| `02_dataset_and_preprocessing.md` | Dataset source, organization, preprocessing, and patient-level data splitting. |
-| `03_exploratory_data_analysis.md` | Dataset exploration, class distribution, patient distribution, and visual analysis. |
-| `04_classification_models.md` | Classification architectures, model configurations, and implementation. |
-| `05_segmentation_models.md` | U-Net architecture and segmentation model variants. |
-| `06_training_and_experiments.md` | Training procedures, experimental configurations, and augmentation strategies. |
-| `07_evaluation_metrics.md` | Classification and segmentation evaluation metrics. |
-| `08_patient_level_analysis.md` | Patient-level evaluation and performance analysis across individual patients. |
-| `09_statistical_analysis.md` | Paired comparisons, confidence intervals, p-values, and Holm correction. |
-| `10_explainability_gradcam.md` | Grad-CAM methodology and classification model explainability. |
-| `11_failure_case_analysis.md` | Incorrect classification predictions and segmentation failure cases. |
-| `12_results_and_discussion.md` | Main experimental results, interpretation, and research findings. |
-| `13_reproducibility_and_environment.md` | Software requirements, environment configuration, and experimental reproducibility. |
-| `14_limitations_and_future_work.md` | Research limitations and possible future improvements. |
+| Chapter | Description |
+|---|---|
+| [01 — Project Overview](01_project_overview.md) | Research objectives, problem definition, scope, and methodology. |
+| [02 — Dataset and Preprocessing](02_dataset_and_preprocessing.md) | Dataset source, organization, preprocessing, and patient-level data splitting. |
+| [03 — Exploratory Data Analysis](03_exploratory_data_analysis.md) | Dataset exploration, class distribution, patient distribution, and visual analysis. |
+| [04 — Classification Models](04_classification_models.md) | Classification architectures, model configurations, and implementation. |
+| [05 — Segmentation Models](05_segmentation_models.md) | U-Net architecture and segmentation model variants. |
+| [06 — Training and Experiments](06_training_and_experiments.md) | Training procedures, experimental configurations, and augmentation strategies. |
+| [07 — Evaluation Metrics](07_evaluation_metrics.md) | Classification and segmentation evaluation metrics. |
+| [08 — Patient-Level Analysis](08_patient_level_analysis.md) | Patient-level evaluation and performance analysis across individual patients. |
+| [09 — Statistical Analysis](09_statistical_analysis.md) | Paired comparisons, confidence intervals, p-values, and Holm correction. |
+| [10 — Explainability with Grad-CAM](10_explainability_gradcam.md) | Grad-CAM methodology and classification model explainability. |
+| [11 — Failure-Case Analysis](11_failure_case_analysis.md) | Incorrect classification predictions and segmentation failure cases. |
+| [12 — Results and Discussion](12_results_and_discussion.md) | Main experimental results, interpretation, and research findings. |
+| [13 — Reproducibility and Environment](13_reproducibility_and_environment.md) | Software requirements, environment configuration, and experimental reproducibility. |
+| [14 — Limitations and Future Work](14_limitations_and_future_work.md) | Research limitations and possible future improvements. |
 
 ## 4. Photos and Visual Evidence
 
-The `photos/` directory contains selected visual materials supporting the research documentation.
+The documentation image library is organized under `Docs/photos/` (relative to the repository root) and contains selected visual materials supporting the written chapters. This library is distinct from `results/`, which stores generated experimental outputs such as evaluation plots, CSV files, and Grad-CAM results.
 
 These images provide visual evidence of the dataset, preprocessing pipeline, model training, experimental results, and evaluation procedures.
 
@@ -77,7 +79,7 @@ Where possible, visualizations should be taken directly from the project's saved
 
 ### 4.1 Referencing Images in Markdown
 
-Images can be displayed directly inside the documentation using relative paths.
+Images can be displayed directly inside chapter Markdown files using paths relative to the `Docs/` directory. For example, a file stored at `Docs/photos/dataset/example.png` is referenced from a chapter as:
 
 For example:
 
@@ -158,7 +160,7 @@ The main technologies and libraries include:
 - **OpenCV** — Image processing.
 - **Pillow** — Image loading and manipulation.
 
-The complete software requirements should be taken from the main project's `requirements.txt` file.
+The complete software requirements and version constraints are maintained in the repository-root [`requirements.txt`](../requirements.txt). Use that file as the authoritative dependency list rather than copying package versions into this documentation index.
 
 ## 8. Main Experimental Findings
 
@@ -227,9 +229,9 @@ The main repository contains the implementation and experimental resources, incl
 - Saved model checkpoints.
 - Experimental results and visualizations.
 
-The `docs/` directory provides the detailed written explanation of the research methodology, implementation, and findings.
+The `Docs/` directory (capital D) provides the detailed written explanation of the research methodology, implementation, and findings. Preserve this capitalization in links and paths, especially on case-sensitive file systems.
 
-For the general project introduction, installation information, and main repository overview, refer to the `README.md` file in the repository's root directory.
+For the general project introduction, installation information, and main repository overview, refer to the [root README](../README.md). For the complete source code, environment dependencies, checkpoints, and generated experiment outputs, navigate to the corresponding directories in the repository root.
 
 ## 11. Documentation Maintenance
 
@@ -276,3 +278,15 @@ These settings describe the baseline implementation and should not automatically
 
 The directory name in this repository is Docs/ (capital D). Relative links and file paths should preserve that capitalization on case-sensitive systems.
 
+
+## 13. Documentation and Results Path Convention
+
+Use these repository-relative locations consistently:
+
+- `Docs/` — written technical and research chapters.
+- `Docs/photos/` — selected supporting images embedded in documentation chapters.
+- `results/` — generated experimental outputs, including metrics, CSV files, plots, and explainability artifacts.
+- `models/` — saved model checkpoints.
+- `requirements.txt` — Python dependency constraints for the project environment.
+
+The root [README](../README.md) is the short project entry point. This file is the index for the detailed research documentation. Keep chapter links relative to this directory and links to repository-root resources prefixed with `../`.
