@@ -456,3 +456,22 @@ The next chapter describes the training procedures and experiments used to devel
 **Architecture:** U-Net  
 **Task:** Brain Tumor MRI Segmentation  
 **Experiments:** Baseline, Flip-only, Flip and Rotation
+
+## Additional Architecture Details Verified in src/models/unet.py
+
+The implemented U-Net uses an input shape of (256, 256, 1). Each convolutional block contains two 3 × 3 convolutions, each followed by batch normalization and ReLU activation. Convolutions use same padding and He-normal kernel initialization.
+
+The encoder stages use 32, 64, 128, and 256 filters, with 2 × 2 max-pooling between stages. Dropout is applied in the deeper encoder stages: 0.1 in the 256-filter block and 0.2 in the 512-filter bottleneck.
+
+The decoder uses 2 × 2 transposed convolutions with stride 2. At each level, the upsampled features are concatenated with the corresponding encoder features before another two-convolution block. The final 1 × 1 convolution has one output channel and sigmoid activation, producing a per-pixel tumor probability map.
+
+### Implemented optimization objective
+
+The model is compiled with Adam using a learning rate of 1e-4. Its loss is the sum of mean binary cross-entropy and Dice loss:
+
+combined loss = mean(binary cross-entropy) + (1 - Dice coefficient)
+
+The compiled metrics are Dice coefficient and binary accuracy. The Dice implementation flattens the tensors and uses a smoothing constant of 1e-6.
+
+These details describe src/models/unet.py and should not be assumed to describe the classification architectures.
+
