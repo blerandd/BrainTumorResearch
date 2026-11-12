@@ -257,3 +257,22 @@ This helps maintain consistency between the written research and the actual repo
 **Dataset:** Figshare Brain Tumor MRI Dataset  
 **Main Programming Language:** Python  
 **Research Areas:** Deep Learning, Medical Image Classification, Image Segmentation, Statistical Analysis, and Explainable AI
+
+## 12. Implementation Details Verified Against the Source Code
+
+The following details were checked against the current Python implementation:
+
+- The dataset loader validates required metadata columns, missing values, class labels, split names, image and mask file existence, and patient overlap across partitions.
+- MRI images are decoded as single-channel unsigned 16-bit PNG data, converted to float32, divided by 65535.0, and resized to 256 × 256 using bilinear interpolation.
+- Segmentation masks are decoded as single-channel unsigned 8-bit PNG data, converted to binary values, resized using nearest-neighbor interpolation, and thresholded again.
+- The U-Net has encoder stages with 32, 64, 128, and 256 filters, a 512-filter bottleneck, transposed-convolution upsampling, skip connections, and a one-channel sigmoid output.
+- The U-Net uses Adam with learning rate 0.0001 and a combined binary-cross-entropy plus Dice loss.
+- The baseline U-Net training script specifies 50 maximum epochs, batch size 4, and seed 42. It uses best-checkpoint saving on validation loss, early stopping, and learning-rate reduction on plateau.
+- The standard U-Net evaluation thresholds predicted probabilities at 0.5 and calculates per-image Dice, IoU, pixel precision, and pixel recall. Patient summaries average image metrics within each patient.
+
+These settings describe the baseline implementation and should not automatically be attributed to every experiment. The flip-only and flip-plus-rotation training scripts must be checked for their own configurations.
+
+### Documentation path convention
+
+The directory name in this repository is Docs/ (capital D). Relative links and file paths should preserve that capitalization on case-sensitive systems.
+
