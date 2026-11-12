@@ -27,6 +27,14 @@ The three classification categories are **glioma**, **meningioma**, and **pituit
 
 The project also includes patient-level evaluation, model comparisons, boundary-based segmentation metrics, statistical analysis, and failure-case inspection.
 
+## Research Documentation
+
+The complete technical and research documentation is maintained in the [Docs directory](Docs/README.md).
+
+It contains 14 chapters covering the project methodology, dataset and preprocessing, exploratory analysis, classification and segmentation architectures, training experiments, evaluation metrics, patient-level and statistical analysis, Grad-CAM explainability, failure cases, results, reproducibility, and limitations.
+
+**Recommended starting point:** [Read the documentation index](Docs/README.md).
+
 ## Dataset
 
 **Source:** [Figshare — Brain Tumor Dataset](https://doi.org/10.6084/m9.figshare.1512427)
@@ -102,6 +110,22 @@ The segmentation experiments include:
 
 Evaluation includes Dice coefficient, Intersection over Union (IoU), precision, recall, patient-level summaries, and boundary-based measures such as HD95, ASSD, and Boundary Dice. Boundary distances are expressed in pixels at the model input resolution; they should not be interpreted as millimeters without valid image-spacing information.
 
+### Research results snapshot
+
+The following values are taken from the evaluation CSV files committed in this repository. They summarize the evaluated checkpoints and test partition represented by those files; they should not be interpreted as evidence of clinical readiness or external generalization.
+
+| Task / experiment | Evaluation scope | Result |
+|---|---|---:|
+| Custom CNN classification | 489 test MRI slices | Accuracy: **0.8466** |
+| Custom CNN classification | Macro one-vs-rest ROC-AUC | **0.9598** |
+| Baseline U-Net | 489 test MRI slices | Mean Dice: **0.7016** |
+| Flip-only U-Net | 489 test MRI slices | Mean Dice: **0.7259** |
+| Flip + rotation U-Net | 489 test MRI slices | Mean Dice: **0.7281** |
+
+For the paired patient-level comparison (35 patients), flip-only U-Net improved mean Dice over baseline by **0.0403** (95% bootstrap CI **[0.0103, 0.0761]**, Holm-adjusted *p* = **0.0019**). The flip + rotation comparison against baseline was not statistically significant after Holm correction (mean difference **0.0312**, 95% CI **[-0.0004, 0.0670]**, adjusted *p* = **0.3167**). The comparison between flip + rotation and flip-only was also not significant (mean difference **-0.0092**, 95% CI **[-0.0283, 0.0105]**, adjusted *p* = **0.4413**).
+
+See [Chapter 09 — Statistical Analysis](Docs/09_statistical_analysis.md) and [Chapter 12 — Results and Discussion](Docs/12_results_and_discussion.md) for interpretation and analysis details.
+
 ### Explainability
 
 Grad-CAM is used to visualize regions that contribute to classification predictions. Both correctly and incorrectly classified examples are retained for qualitative inspection.
@@ -117,6 +141,9 @@ Grad-CAM maps are model explanations, not tumor segmentations or clinical eviden
 
 ```text
 BrainTumorResearch/
+├── Docs/                         # 14 chapters of technical and research documentation
+│   ├── README.md
+│   └── 01–14_*.md
 ├── data/
 │   ├── raw/                       # Original dataset files (local)
 │   └── processed/                 # Images, masks, splits.csv (local)
